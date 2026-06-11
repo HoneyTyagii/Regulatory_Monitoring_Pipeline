@@ -1,0 +1,62 @@
+# Default registry of monitored regulatory sources, grouped by jurisdiction.
+# Add, disable, or retune a source here without changing application code.
+# Fields map directly to the regmon.models.RegulatorySource model.
+
+sources:
+  # --- Reserve Bank of India (RBI) -------------------------------------------
+  - id: rbi-notifications
+    name: RBI Notifications
+    jurisdiction: RBI
+    url: https://www.rbi.org.in/Scripts/NotificationUser.aspx
+    source_type: html
+    description: Circulars and notifications issued by the Reserve Bank of India.
+    crawl_frequency_minutes: 720
+    tags: [banking, india, circulars]
+
+  - id: rbi-press-releases
+    name: RBI Press Releases
+    jurisdiction: RBI
+    url: https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx
+    source_type: html
+    description: Official press releases from the Reserve Bank of India.
+    crawl_frequency_minutes: 1440
+    tags: [banking, india, press]
+
+  # --- Securities and Exchange Board of India (SEBI) -------------------------
+  - id: sebi-legal-circulars
+    name: SEBI Legal Circulars
+    jurisdiction: SEBI
+    url: https://www.sebi.gov.in/sebiweb/home/HomeAction.do?doListing=yes&sid=1&ssid=6&smid=0
+    source_type: html
+    description: Circulars published by the Securities and Exchange Board of India.
+    crawl_frequency_minutes: 720
+    tags: [securities, india, circulars]
+
+  # --- US Food and Drug Administration (FDA) ---------------------------------
+  - id: fda-press-announcements
+    name: FDA Press Announcements
+    jurisdiction: FDA
+    url: https://www.fda.gov/about-fda/contact-fda/stay-informed/rss-feeds/press-releases/rss.xml
+    source_type: rss
+    description: FDA press announcements RSS feed.
+    crawl_frequency_minutes: 360
+    tags: [healthcare, usa, press]
+
+  - id: fda-federal-register
+    name: FDA Federal Register Rules
+    jurisdiction: FDA
+    url: https://www.federalregister.gov/agencies/food-and-drug-administration
+    source_type: html
+    description: FDA rules and notices published in the US Federal Register.
+    crawl_frequency_minutes: 720
+    tags: [healthcare, usa, rules]
+
+  # --- European Union AI Act -------------------------------------------------
+  - id: eu-ai-act-updates
+    name: EU AI Act Newsroom
+    jurisdiction: EU_AI_ACT
+    url: https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+    source_type: html
+    description: Updates to the EU regulatory framework for artificial intelligence.
+    crawl_frequency_minutes: 1440
+    tags: [ai, eu, regulation]

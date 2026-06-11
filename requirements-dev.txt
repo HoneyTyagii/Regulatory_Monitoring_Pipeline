@@ -9,3 +9,4 @@ ruff>=0.4,<1
 black>=24.3,<25
 mypy>=1.9,<2
 pre-commit>=3.7,<4
+types-PyYAML>=6.0,<7
