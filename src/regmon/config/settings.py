@@ -74,6 +74,7 @@ class StorageSettings(_ConfigBase):
 
     database_url: str = "sqlite:///./data/regmon.sqlite"
     vectorstore_path: Path = Path("./data/vectorstore")
+    raw_storage_path: Path = Path("./data/raw")
 
 
 class LLMSettings(_ConfigBase):
@@ -92,6 +93,9 @@ class CrawlSettings(_ConfigBase):
     user_agent: str = "regmon-bot/0.1 (+https://example.com/bot)"
     rate_limit_per_sec: float = Field(default=1.0, gt=0)
     timeout_seconds: float = Field(default=30.0, gt=0)
+    max_retries: int = Field(default=3, ge=0, le=10)
+    backoff_factor: float = Field(default=0.5, ge=0)
+    respect_robots: bool = True
 
 
 class NotificationSettings(_ConfigBase):
@@ -136,6 +140,7 @@ _ENV_MAP: dict[str, dict[str, str]] = {
     "storage": {
         "database_url": "REGMON_DATABASE_URL",
         "vectorstore_path": "REGMON_VECTORSTORE_PATH",
+        "raw_storage_path": "REGMON_RAW_STORAGE_PATH",
     },
     "llm": {
         "llm_provider": "REGMON_LLM_PROVIDER",
@@ -148,6 +153,9 @@ _ENV_MAP: dict[str, dict[str, str]] = {
         "user_agent": "REGMON_CRAWL_USER_AGENT",
         "rate_limit_per_sec": "REGMON_CRAWL_RATE_LIMIT_PER_SEC",
         "timeout_seconds": "REGMON_CRAWL_TIMEOUT_SECONDS",
+        "max_retries": "REGMON_CRAWL_MAX_RETRIES",
+        "backoff_factor": "REGMON_CRAWL_BACKOFF_FACTOR",
+        "respect_robots": "REGMON_CRAWL_RESPECT_ROBOTS",
     },
     "notifications": {
         "slack_webhook_url": "REGMON_SLACK_WEBHOOK_URL",
