@@ -1,0 +1,8 @@
+# Runtime dependencies (pinned ranges for reproducibility).
+# Install with: pip install -r requirements.txt
+# For development tooling, use: pip install -e ".[dev]"
+
+pydantic>=2.6,<3
+python-dotenv>=1.0,<2
+structlog>=24.1,<25
+PyYAML>=6.0,<7

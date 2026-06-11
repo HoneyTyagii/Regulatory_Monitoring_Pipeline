@@ -1,0 +1,84 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "regmon"
+version = "0.1.0"
+description = "Regulatory Monitoring Pipeline - multi-agent system to collect, analyze, and act on regulatory changes across jurisdictions."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Regulatory Monitoring Team" }]
+keywords = ["regulatory", "compliance", "multi-agent", "rag", "llm", "monitoring"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pydantic>=2.6,<3",
+    "python-dotenv>=1.0,<2",
+    "structlog>=24.1,<25",
+    "PyYAML>=6.0,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9",
+    "pytest-asyncio>=0.23,<0.24",
+    "pytest-cov>=4.1,<5",
+    "ruff>=0.4,<1",
+    "black>=24.3,<25",
+    "mypy>=1.9,<2",
+    "pre-commit>=3.7,<4",
+]
+
+[project.scripts]
+regmon = "regmon.cli:main"
+
+[project.urls]
+Homepage = "https://example.com/regulatory-monitoring-pipeline"
+Repository = "https://example.com/regulatory-monitoring-pipeline"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+regmon = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "C4", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["regmon"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: marks tests that hit external systems (deselect with '-m \"not integration\"')",
+]
