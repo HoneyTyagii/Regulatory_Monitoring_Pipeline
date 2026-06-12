@@ -74,6 +74,7 @@ class StorageSettings(_ConfigBase):
 
     database_url: str = "sqlite:///./data/regmon.sqlite"
     vectorstore_path: Path = Path("./data/vectorstore")
+    vectorstore_backend: Literal["memory", "chroma", "faiss"] = "memory"
     raw_storage_path: Path = Path("./data/raw")
 
 
@@ -140,6 +141,7 @@ _ENV_MAP: dict[str, dict[str, str]] = {
     "storage": {
         "database_url": "REGMON_DATABASE_URL",
         "vectorstore_path": "REGMON_VECTORSTORE_PATH",
+        "vectorstore_backend": "REGMON_VECTORSTORE_BACKEND",
         "raw_storage_path": "REGMON_RAW_STORAGE_PATH",
     },
     "llm": {
