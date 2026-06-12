@@ -10,6 +10,7 @@ error isolation so one bad URL never aborts a whole crawl.
 from __future__ import annotations
 
 from regmon.config.settings import Settings
+from regmon.crawler.adapters.registry import AdapterRegistry
 from regmon.crawler.fetcher import AsyncHttpFetcher, FetchError
 from regmon.crawler.storage import RawDocumentStore, StoredDocument
 from regmon.logging_config import get_logger
@@ -27,11 +28,13 @@ class CrawlerAgent:
         *,
         fetcher: AsyncHttpFetcher | None = None,
         store: RawDocumentStore | None = None,
+        adapters: AdapterRegistry | None = None,
     ) -> None:
         self._settings = settings
         self._owns_fetcher = fetcher is None
         self._fetcher = fetcher or AsyncHttpFetcher(settings.crawl)
         self._store = store or RawDocumentStore(settings.storage.raw_storage_path)
+        self._adapters = adapters
 
     async def __aenter__(self) -> CrawlerAgent:
         return self
@@ -47,9 +50,15 @@ class CrawlerAgent:
     async def discover_urls(self, source: RegulatorySource) -> list[str]:
         """Return the document URLs to fetch for ``source``.
 
-        The base implementation simply returns the source's entry-point URL.
-        Subclasses override this to parse feeds or listing pages.
+        If an adapter is registered for the source's jurisdiction, it is used to
+        parse the entry point (feed or listing page) into document URLs.
+        Otherwise the source's entry-point URL is returned as-is. Subclasses may
+        also override this directly.
         """
+        if self._adapters is not None:
+            adapter = self._adapters.for_source(source)
+            if adapter is not None:
+                return await adapter.discover_urls(source, self._fetcher)
         return [str(source.url)]
 
     async def crawl_source(self, source: RegulatorySource) -> list[StoredDocument]:
@@ -62,7 +71,11 @@ class CrawlerAgent:
             log.info("crawler.source_skipped", source_id=source.id, reason="disabled")
             return []
 
-        urls = await self.discover_urls(source)
+        try:
+            urls = await self.discover_urls(source)
+        except FetchError as exc:
+            log.warning("crawler.discovery_failed", source_id=source.id, error=str(exc))
+            return []
         log.info("crawler.source_started", source_id=source.id, url_count=len(urls))
 
         stored: list[StoredDocument] = []
