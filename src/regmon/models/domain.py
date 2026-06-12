@@ -119,6 +119,11 @@ class ParsedDocument(RegMonBaseModel):
     title: str = Field(..., min_length=1, max_length=512)
     clean_text: str = Field(..., min_length=1, description="Normalized plain text.")
     summary: str | None = Field(default=None, max_length=4096)
+    reference_number: str | None = Field(
+        default=None,
+        max_length=256,
+        description="Regulator reference/circular number, e.g. 'RBI/2023-24/123'.",
+    )
     language: str = Field(default="en", min_length=2, max_length=16)
     keywords: list[str] = Field(default_factory=list)
     sections: list[str] = Field(default_factory=list)
