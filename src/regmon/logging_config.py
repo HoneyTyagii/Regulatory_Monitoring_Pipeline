@@ -60,8 +60,10 @@ def configure_logging(
     if _CONFIGURED and not force:
         return
 
-    resolved_level = _coerce_level(level or os.getenv("REGMON_LOG_LEVEL", "INFO"))
-    resolved_fmt: LogFormat = fmt or os.getenv("REGMON_LOG_FORMAT", "console")  # type: ignore[assignment]
+    resolved_level = _coerce_level(
+        level if level is not None else os.getenv("REGMON_LOG_LEVEL", "INFO")
+    )
+    resolved_fmt: LogFormat = fmt if fmt is not None else os.getenv("REGMON_LOG_FORMAT", "console")  # type: ignore[assignment]
 
     timestamper = structlog.processors.TimeStamper(fmt="iso", utc=True)
 
@@ -100,4 +102,4 @@ def get_logger(name: str | None = None) -> structlog.stdlib.BoundLogger:
     """Return a bound structured logger, configuring logging on first use."""
     if not _CONFIGURED:
         configure_logging()
-    return structlog.get_logger(name)
+    return structlog.get_logger(name)  # type: ignore[no-any-return]
