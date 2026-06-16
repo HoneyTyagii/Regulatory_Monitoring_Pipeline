@@ -34,7 +34,10 @@ ENV/
 !.env.example
 *.pem
 *.key
-secrets.*
+secrets.env
+secrets.yaml
+secrets.json
+secrets.toml
 
 # Test / coverage / cache
 .pytest_cache/
